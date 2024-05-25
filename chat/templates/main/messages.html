@@ -1,0 +1,20 @@
+<style>
+    .msg{
+        font-weight: bold;
+    }
+</style>
+
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-light" role="alert">
+        <ul {% if message.tags %} class="{{ message.tags }} msg " {% endif %}>{{ message }}</ul>
+    </div>
+   
+
+
+    {% endfor %}
+</ul>
+{% endif %}  

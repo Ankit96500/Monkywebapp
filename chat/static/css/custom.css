@@ -1,0 +1,42 @@
+/* message box csss */
+
+
+body{
+    background-color: #f1f1f1;
+    background-color: #ffffff;
+    margin-top:20px;
+   
+}
+
+#notext{
+    font-size: 80px;
+}
+
+div.fixed{
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+}
+
+
+/* Custom CSS to remove focus ring 
+.btn:focus,
+.btn:active,
+.nav-link:focus,
+.nav-link:active,
+.form-control:focus,
+.form-control:active,
+.form-select :active,
+.form-select :focus,
+.input-group-text:focus,
+.input-group-text:active,
+.custom-select:focus,
+.custom-select:active,
+.dropdown-toggle:focus,
+.dropdown-toggle:active,
+.list-group-item:focus,
+.list-group-item:active {
+    outline: none;
+    box-shadow: none;
+}
+*/

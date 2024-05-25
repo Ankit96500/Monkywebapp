@@ -1,0 +1,256 @@
+{% load static %}
+<script>    
+
+
+    $(document).ready(function(){
+        // we get other user id from message btn.
+        let otheruser_id = JSON.parse(document.getElementById('otheruser_id').textContent);
+    
+
+       // here [otheuserfullname] is take care afull name of user from both side, either click on CHAT btn or MESSAGE btn ,it will get the full name of other user. 
+        var otheuserfullname = JSON.parse(document.getElementById('otheuserfullname').textContent);
+
+        var CHAT_USER_ID;
+        var socket;
+        var USER_ID;
+        let check_thread ;
+        let loc = window.location
+        let wsStart = 'ws://'
+
+        // this condition check whether user chat the thread user or a new user
+        // if condition true means user chat to new user:
+        if (otheruser_id){
+            $('.chat-message-body').show();
+            USER_ID = $('#logged-in-user').val();
+            CHAT_USER_ID = otheruser_id;
+
+            //console.log('call chatting through message button')
+            
+            if(loc.protocol === 'https') {
+                wsStart = 'wss://'
+            }
+            socket = new WebSocket( wsStart + window.location.host + "/ws/chat/" + CHAT_USER_ID + "/")
+        
+            if(socket){
+                //console.log('yes socket call msg-btn')
+                Socket_Call()
+            }
+            
+        }
+
+//-----------------------------------------------------------------------------------------------------------chat button
+    // logged-in user chat to thread users
+        $("tbody").on("click",".btn-chat",function () {
+           
+            //here we check request user is Connected before with someone or not:
+            if(otheruser_id || check_thread){
+                socket.close();
+            }
+            
+            $('.chat-message-body').show();
+
+            USER_ID = $('#logged-in-user').val();
+            otheuserfullname = $(this).attr("dtfullname");
+            CHAT_USER_ID = $(this).attr("dt");
+
+            //console.log('direct chatting through chat button')
+            //console.log('logged in user_id',USER_ID);   
+            //console.log('chatuser_id',CHAT_USER_ID);   
+
+            
+            if(loc.protocol === 'https') {
+                wsStart = 'wss://'
+            }
+            
+            socket = new WebSocket( wsStart + window.location.host + "/ws/chat/" + CHAT_USER_ID + "/")
+          
+            if(socket){
+               // console.log('yes socket call chat-btn')
+                Socket_Call()
+            }
+
+
+        });
+    
+        function Socket_Call(){
+            socket.onopen = function(event){
+                    
+                switch (socket.readyState) {
+                    case WebSocket.CONNECTING:
+                        statusMessage = 'Server Connecting...';
+                        break;
+                    case WebSocket.OPEN:
+                        statusMessage = 'Server Connected';
+                        break;
+                    case WebSocket.CLOSING:
+                        statusMessage = 'Server Closing...';
+                        break;
+                    case WebSocket.CLOSED:
+                        statusMessage = 'Server Closed';
+                        break;
+                    default:
+                        statusMessage = 'Unknown state';
+                }
+
+                
+                document.getElementById("readystate").innerHTML = statusMessage;
+                document.getElementById('username').innerHTML = otheuserfullname;
+
+                document.getElementById("send-button").onclick = function() {
+                    var inputMessage = document.getElementById('chat-input-message');
+                    var message = inputMessage.value;
+                    
+                    socket.send(JSON.stringify({
+                        'msg': message,
+                        'sent_by_id': USER_ID,
+                        "send_to_id" : CHAT_USER_ID,
+                    }))
+                    
+                    inputMessage.value = '';
+                }
+
+            } 
+
+            
+            socket.onerror = function(event){
+                document.getElementById("readystate").innerHTML = "Some Error Occur"
+                //console.log('error',event);
+            }
+            
+            socket.onclose = function(event){
+                document.getElementById("readystate").innerHTML = "Server Disconnected"
+                //console.log('close',event);
+            }
+
+
+            
+            socket.onmessage = function(event){
+                //console.log('message',event);
+                json_obj = JSON.parse(event['data'])
+                
+                message = json_obj['message']
+                sender_obj = json_obj['sender']
+                receiver_obj = json_obj['receiver']
+
+                //console.log('message',message)
+                //console.log('sender',sender_obj)   
+                appendMessage(message,sender_obj)
+                
+                function appendMessage(message,sender_obj) {
+                    var messageBox = document.getElementById('chatmessageBox');
+                    var newMessage = document.createElement('div');
+                    //newMessage.innerHTML = '<strong>' +  sender_obj  + ':</strong> ' + message;
+                    newMessage.innerHTML = '<div class="message-body">' + '<strong>' + sender_obj + ':</strong> ' +'<p1>'+ message +'</p1>' +'</div>'
+                    messageBox.appendChild(newMessage);
+                    messageBox.scrollTop = messageBox.scrollHeight;
+                }
+                                            
+            }  
+
+            // call ajax and fetch data from data base silently imp.[dont't worry it call only one time ]
+            //console.log('ajax calllllllllll');
+            let output = "";
+            $.ajax({
+                url:"{% url 'chat:chatuser' %}",
+                method : "GET",
+                data:{otheruser_id:CHAT_USER_ID},
+                success:function(result){
+                    var th = result.thread_obj
+                    if(th == 'None'){
+           
+                        check_thread = 0;
+                    }
+                    else{
+                        check_thread = 1;
+                    }
+
+
+
+                    var x = result.chat_messages;
+                    for (let i=0; i < x.length; i++){
+                        output += '<div class="message-body"><strong>' + x[i].user_fname + ': </strong><p1>'+ x[i].message +'</p1><span class="datetime">'+ x[i].timestamp +'</span></div>'+ '\n';
+                    
+                    }
+
+                    $("#chatmessageBox").html(output);
+
+                }
+            });
+
+
+            // end of Socket_Call function..
+       }
+     
+
+       
+    // delete chat button
+    $("tbody").on("click",".btn-del",function () {
+        var CHAT_USER_ID = $(this).attr("deluser");
+        mythis = this;
+        $.ajax({
+            url:"{% url 'chat:DeleteUser' %}",
+            method:"GET",
+            data:{chat_user_id:CHAT_USER_ID},
+            success:function (result){
+                if(result.status == 1){
+                    $(mythis).closest("tr").fadeOut("fast");
+                   // console.log('data deleted')
+                    $('.chat-message-body').hide();
+
+                }
+                else{
+                    alert('Unable To Detele Data !!')
+                }
+            } 
+        })
+        
+    });
+
+
+
+
+    });
+
+
+    
+   
+    /*
+    function appendMessage(message, sender) {
+        var messageBox = document.getElementById('chatmessageBox');
+        var newMessage = document.createElement('div');
+        newMessage.innerHTML = '<strong>' + sender + ':</strong> ' + message;
+        messageBox.appendChild(newMessage);
+        
+        // Scroll to the bottom to show the latest message
+        messageBox.scrollTop = messageBox.scrollHeight;
+    }
+    
+    function sendMessage() {
+        var inputMessage = document.getElementById('chat-input-message');
+        var message = inputMessage.value;
+        
+        // For this example, the sender is 'You'
+        appendMessage(message, 'You');
+        
+        // In a real application, you might send the message to a server and handle the incoming message there
+        
+        // Clear the input field
+        inputMessage.value = '';
+    }
+    
+    */      
+
+</script>
+
+
+
+
+{% comment %}  $("btn-del").click(function(){
+               var userid = $('#chatuser').val();
+               var bb = $("input[data-sid=user-id]").val();
+               var hid = $("input[type=hidden]").val();
+             
+               var v1 = $("#logged-in-user").val();
+               console.log('v1',v1);
+               
+               {% endcomment %}

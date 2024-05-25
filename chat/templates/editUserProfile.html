@@ -1,0 +1,149 @@
+{% extends 'main/parent.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container text-center p-3">
+  
+    <div class="row">
+      <div class="col-sm-4 pt-2">
+     
+        {% for user in userformquery  %}   
+            <div class="border border-0 shadow">
+                <img src="{{user.profile_pic.url}}" alt="picture" class="img-fluid rounded"  id="uploadedImage">             
+            </div>
+        {% endfor %}    
+      </div>  
+
+      <div class="col-sm-7 p-2">
+        <div class="row ">
+          {% include "main/editbasicinfo.html" %}
+          
+
+        </div>
+
+       <div class="row g-3">
+        {% include "main/editpersonalinfo.html" %}
+                 
+        </div>
+
+   
+      </div>
+    </div>
+    
+
+  
+</div>
+{% endblock content %}
+
+
+
+<!--
+  <script src="{% static "js/jquery.js" %}"></script> 
+  {% comment %}<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>{% endcomment %}
+  <script>
+    function toggleLight() {
+      var greenLight = document.getElementById("green-light");
+      
+      if (greenLight.style.backgroundColor === "green") {
+        greenLight.style.backgroundColor = "#4fff09";
+      } else {
+        greenLight.style.backgroundColor = "#4fff09";
+      }
+    }
+    
+    
+    
+    
+    // add user skills java-script
+    $(document).ready(function(){        
+      var postURL = "/addmore.php";  
+      var i=1;    
+      
+      
+    $('#addskill').click(function(){    
+      console.log('each time skill var value',i)
+      if ( i>9){
+        $('#addskill').hide()
+      }
+      
+      $('#skilldynamic_field').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="name[]" class="form-control name_list" required /></td><td><button type="button" name="remove" id="'+i+'" class=" skillbtn_remove ms-2">-</button></td></tr>');    
+      i++;    
+    });  
+    
+    $(document).on('click', '.skillbtn_remove', function(){  
+      i--;  
+      if ( i<10){
+        $('#addskill').show()
+      }
+      console.log('each time skil in remove buuton',i)
+      var button_id = $(this).attr("id");     
+      $('#row'+button_id+'').remove();  
+    });    
+    
+    $('#skillsubmit').click(function(){              
+      $.ajax({    
+        url:postURL,    
+        method:"POST",    
+        data:$('#add_name').serialize(),  
+        type:'json',  
+        success:function(data)    
+        {  
+          i=1;  
+          $('.dynamic-added').remove();  
+          $('#add_name')[0].reset();  
+          alert('Record Inserted Successfully.');  
+        }    
+      });    
+    });  
+    
+    
+    
+    //add user socila-links javascript
+    
+    
+    var postURL = "/addmore2.php";  
+    var i=1;    
+    
+    $('#sociallink').click(function(){    
+      i++;    
+      $('#social_linkdynamic_field').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="name[]" class="form-control name_list" required /></td><td><button type="button" name="remove" id="'+i+'" class=" social_linkbtn_remove ms-2">sub</button></td></tr>');    
+    });  
+    
+    $(document).on('click', '.social_linkbtn_remove', function(){    
+      var button_id = $(this).attr("id");     
+      $('#row'+button_id+'').remove();    
+    });    
+    
+  $('#social_linksubmit').click(function(){              
+    $.ajax({    
+            url:postURL,    
+            method:"POST",    
+            data:$('#add_name').serialize(),  
+            type:'json',  
+            success:function(data)    
+            {  
+              i=1;  
+              $('.dynamic-added').remove();  
+              $('#add_name')[0].reset();  
+              alert('Record Inserted Successfully.');  
+            }    
+          });    
+        });  
+
+        
+        
+        
+        
+        
+      });    
+      
+      
+      
+    </script> 
+    
+-->
+    
+
+
+

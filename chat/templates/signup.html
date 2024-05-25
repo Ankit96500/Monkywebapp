@@ -1,0 +1,120 @@
+{% extends "main/parent.html" %}
+{% load static %}
+
+{% block navbar %}{% endblock navbar %}
+
+{% block signuppage %}
+<style>
+    .info{
+        color:red;
+    }
+    table,td,th,tr{
+        border:2px solid black;
+    }
+    .errorlist{
+        list-style-type: none;
+        font-size: 10px;
+        color:red;
+    }
+</style>
+<div class="container mx-auto p-4 mt-5">
+    <div class="row justify-content-start">
+        {% include "main/messages.html" %}
+        <div class="col-md-6 offset-md-3">
+            <div class="border border-0 ">
+                <div class="text-center my-3">
+                    <img src="{% static "images/logo.png" %}" alt="picture" class="" height=150 widht=400>
+                </div>
+                
+                
+                {% if otp %}
+                
+                <form method="POST" action="{% url "chat:Sign_Up" %}">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom display">
+                            <h3 class="text-center text-body-secondary">Verify Your Email</h3>  
+                            <span style="font-size:10px">Don't go back and refresh the page !</span>                             
+                        </legend>
+                            <input type="hidden" name="user" value="{{user}}">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">OTP</span>
+                                </div>
+                                <input type="text" class="form-control form-control focus-ring focus-ring-light border" placeholder="Enter Your OTP" aria-label="OTP" aria-describedby="basic-addon1" name = 'otp' id="otp-input">
+                            </div>
+                            
+                    </fieldset>
+                    <div class="form-group">
+                        <small class="float-right text-muted">
+                            <i><a href="#" class="text-dark" onclick="ReSendOTP('{{user}}', 'resendOTPmess')"><i id="resendOTPmess">Resend</i> OTP</a>
+                        </small>
+                        <button class="btn mainbtn btn btn-dark" style="float:right;" type="submit">Verify</button>
+                        
+                    </div>
+                    
+                </form>
+               
+                {% else %}
+                
+                
+                <form action="" method="post" novalidate>
+                    {% csrf_token %}  
+                    {{form.non_field_errors}}    
+                    {% for fm in form  %}
+                    <div>
+                        {{fm}} <span class="errorlist"> {{fm.errors | striptags}} </span>  <br>        
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <input type="submit" value="Signup"class="btn btn-outline-dark">
+                    </div>
+                  
+                </form>
+
+                
+                
+                {% endif %}
+            </div>
+                
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{% static "js/jquery.js" %}"></script>
+<script>
+          
+
+
+    function ReSendOTP(username, mess_id) {
+	
+        mess = document.getElementById(mess_id);
+        mess.innerText = "Sending...";
+        $.ajax({
+            type: 'GET',
+            url: '{% url "chat:resend_otp" %}',
+            data: {user:username},
+            success: function(data){
+                if(data.status=1){
+                    alert("Please Check Your Mail Box.");
+                }
+                if(data.status=0){
+                    alert("Error Occur");
+                }
+              
+                mess.innerText = 'Resend';
+    
+            }
+        })
+    }
+
+
+
+</script>
+
+
+
+{% endblock signuppage %}

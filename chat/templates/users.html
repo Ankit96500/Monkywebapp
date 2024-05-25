@@ -1,0 +1,302 @@
+{% extends "main/parent.html" %}
+{% load static %}
+{% block content %}
+
+
+{% block custom_css %} 
+<link rel="stylesheet" href="{% static "css/message.css" %}">
+{% endblock custom_css %}
+
+<input type="hidden" name="logged-in-user" id="logged-in-user" value="{{request.user.id}}">
+
+<div class="container mt-5">
+
+  <div class="row">
+    <!--users-->
+    
+    <div class="col-sm-4" id="inbox-fullbody">
+    
+        <div class="card-header shadow-sm" id="inbox-header">
+          <p id="inbox-text">Inbox</p>
+        </div>
+        <div class="card-body shadow-sm" id="inbox">
+            
+            <table class="table">
+              <tbody>
+
+                  {% if users %}
+                 
+                    {% for user in users %}
+                    <tr>
+                      <td scope="col">
+                        <a href="{% url "chat:Home" user.id %}">
+                          <img src="{{user.profile_pic.url}}" alt="pic" height=30 width=30 class="rounded-circle">
+                        </a>
+                      
+                      </td>
+                      
+                      <td scope="col"> 
+                        <a href="{% url "chat:Home" user.id %}" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover ">
+                          <b>
+                            {{user.first_name | capfirst}} {{user.last_name }}    
+                          </b>
+                        </a>
+                      </td>
+                      <td>
+                        
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-dark btn-chat" dt="{{user.id}}" dtfullname="{{user.first_name}} {{user.last_name}}">chat
+                          </button>
+                          
+                          <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                            
+                          <!--show user badges-->
+                          {% if user.is_online %}
+                          <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                            <span class="visually-hidden">New alerts</span>
+                          </span>
+                          {% endif %}
+                          
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item btn-del" href="#" deluser="{{user.id}}">Delete <i class="bi bi-trash3"></i></a></li>
+                            
+                          </ul>
+                        </div>
+
+                      
+                      </td>
+                      
+                    </tr>
+                    {% endfor %}
+                  {% else %}
+                      <h3>Empty Box</h3>
+                  {% endif %}  
+                </tbody>
+              </table>
+         
+        </div>
+
+
+    </div>
+   
+    <!--chat page
+    -->
+      
+  <div class="col-sm-5 mt-3 chat-message-body">
+  
+    <div class="card-body shadow-sm" id="chatmessageBox-header">
+      <div class="card-header ">
+        <strong><span id="username"></span></strong>
+        <span id ="readystate" style="float:right;"></span>
+      </div>
+    </div>
+    
+      <div class="card-body shadow-sm">
+        <div id="chatmessageBox">
+         <!--
+            <div class="message-body">
+              <p1>Hello world! This is a test message to show how to make an arrow on the side of the box.</p1>
+            </div>
+          -->
+          
+        </div>
+        
+        <div class="input-group mb-3">
+        
+          
+          {% comment %} <input type="text"  class="form-control message-input border-secondary focus-ring focus-ring-light" id="chat-input-message" placeholder="type your message.." aria-label="type your message.." aria-describedby="button-addon2" autofocus > {% endcomment %}
+        
+        
+          <textarea  id="chat-input-message"  rows="1" cols="49" placeholder="type your message.." class="form-control message-input border-secondary focus-ring focus-ring-light" style="resize:none;"></textarea>  
+
+          <input type="button" value="Send" id="send-button" class="btn btn-outline-danger ">
+        </div>
+     
+      </div>
+
+  </div>
+
+
+
+
+{{otheruser_id|json_script:"otheruser_id"}}
+{{otheuserfullname|json_script:"otheuserfullname"}}
+      
+<script src="{% static "js/jquery.js" %}"></script>
+
+{% include "main/chat_ajax.html" %}
+
+
+
+{% endblock content %}
+
+
+
+
+{% comment %} 
+{% extends "main/parent.html" %}
+{% load static %}
+{% block content %}
+<style>
+  #chatmessageBox {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 500px;
+    width: auto;
+    overflow: auto;
+  }
+  #chat-input-message{
+    padding: 10px;
+    width: ;
+  }
+
+  #chatmessageBox-header{
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: ;
+    width: auto;
+    overflow: auto;
+  }
+
+  #inbox{
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 500px;
+    width: auto;
+    overflow: auto;
+  }
+  #inbox-header{
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: ;
+    width: auto;
+    overflow: auto;
+  }
+</style>
+
+<div class="container">
+
+  <div class="row">
+    <!--users-->
+    <div class="col-sm-4">
+      {% block chat_page %}{% endblock chat_page %}
+    
+
+      <input type="hidden" name="logged-in-user" id="logged-in-user" value="{{request.user.id}}">
+      
+      
+        <div class="card-header" id="inbox-header">
+          Inbox
+        </div>
+        <div class="card-body" id="inbox">
+            
+            <table class="table">
+              <tbody>
+
+                  {% for user in users %}
+                  <tr>
+                    <td scope="col"><img src="{% static "images/user.jfif" %}" alt="pic" height=30 width=30 ></td>
+                    <td scope="col">  {{user.first_name | capfirst}} {{user.last_name }}     </td>
+                    <td>
+                      
+                      <input type="button" value="delete" dt="{{user.id}}" class="btn-del"> 
+                      <input type="button" value="chat" dt="{{user.id}}" class="btn-chat">
+                    </td>
+                    
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+         
+        </div>
+
+
+    </div>
+    
+    <!--chat page
+    -->
+      
+  <div class="col-sm-6 ms-3">
+  
+    <div class="card-body" id="chatmessageBox-header">
+      <div class="card-header ">
+        chat page....
+      </div>
+    </div>
+    
+      <div class="card-body">
+        <div id="chatmessageBox"></div>
+        
+
+        <input type="text" class="message-input" id="chat-input-message" placeholder="Type your message...">
+        <button id ="send-button" onclick="sendMessage()">Send</button>
+      
+      </div>
+  
+    </div>
+
+  </div>
+
+
+
+
+  {{request.user.first_name|json_script:"sender-name"}}
+      
+<script src="{% static "js/jquery.js" %}"></script>
+
+{% include "main/chat_ajax.html" %}
+
+
+
+{% endblock content %}
+
+
+{% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+      {% comment %}  <div class="card">
+        <div class="card-header">
+          Inbox
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+          
+
+            <table class="table">
+              <tbody>
+
+                  {% for user in users %}
+                  <tr>
+                    <td scope="col"><img src="{% static "images/user.jfif" %}" alt="pic" height=30 width=30 ></td>
+                    <td scope="col">  {{user.first_name | capfirst}} {{user.last_name }}     </td>
+                    <td>
+                    
+                      <input type="button" value="delete" dt="{{user.id}}" class="btn-del"> 
+                      <input type="button" value="chat" dt="{{user.id}}" class="btn-chat">
+                    </td>
+                    
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+
+          
+          </blockquote>
+        </div>
+      </div> {% endcomment %}

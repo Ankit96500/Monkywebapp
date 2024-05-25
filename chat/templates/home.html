@@ -1,0 +1,164 @@
+ {% extends 'main/parent.html' %}
+ {% load static %}
+
+ {% block content %}
+ <input type="hidden" name="logged-in-user" id="logged-in-user" value="{{request.user.id}}">
+
+ <div class="fixed p-3">
+   {% if user_count %}
+   <strong> Registered User : {{user_count}}</strong>
+   {% endif %}
+  </div>  
+ 
+    
+ <div class="container">
+
+      {% if userquery %}
+        {% for user in userquery %}
+        <div class="card mb-3 shadow-sm" style="max-width: 540px;">
+            <div class="row g-3">
+              <div class="col-md-4 text-center">
+                <img src="{{user.profile_pic.url}}" class="img-fluid rounded object-fit-fill" alt="pic">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+
+                  {% if user.userdetails.category == 1 %}
+                  <div class="fs-5"> <b>{{user.first_name| capfirst}} {{user.last_name | capfirst}}</b>
+                    <span  style="font-size:13px;"> <i>| Student</i></span>  
+                  </div>
+                 
+                  {% elif user.userdetails.category == 2 %}
+                  <div class="fs-5"> <b>{{user.first_name| capfirst}} {{user.last_name | capfirst}}</b>
+                    <span  style="font-size:13px;"> <i>| Teacher</i></span> 
+                   </div>
+                  
+                  {% else %}
+                  <div class="fs-5"> <b>{{user.first_name| capfirst}} {{user.last_name | capfirst}}</b> </div>
+
+                  {% endif %}
+                  
+                  <div>
+                    {% if user.userdetails.college %}
+                    {{user.userdetails.college}}
+                    {% endif %}
+                  </div>
+              
+                  {% if user.userdetails.category == 1 %}
+                     <!--student-->
+        
+                  <div>
+                    {% if user.userdetails.stream %}
+                    {{user.userdetails.stream}}
+                    {% endif %}
+                  </div>
+                  
+                  
+                    {% if user.userdetails.year == 1%}
+                      {{user.userdetails.year}}<sup>st</sup> year
+                    
+                    {% elif user.userdetails.year == 2 %}
+                      {{user.userdetails.year}}<sup>nd</sup> year
+                    
+                    {% elif user.userdetails.year == 3 %}
+                      {{user.userdetails.year}}<sup>rd</sup> year
+                    
+                    {% elif user.userdetails.year == 4 %}
+                      {{user.userdetails.year}}<sup>th</sup> year
+                    
+                    {% elif user.userdetails.year == 5 %}
+                      {{user.userdetails.year}}<sup>th</sup> year
+                      
+                    {% endif %}
+                  
+                  
+                  {% elif user.userdetails.category == 2 %}
+                  <!--teacher--> 
+                  <div>
+                    {% if user.userdetails.subject %}
+                    {{user.userdetails.subject}}
+                    {% endif %}
+                  </div>
+
+
+                  {% endif %}
+                 
+                  <div>
+                    {% if user.userdetails.placelive %}
+                    {{user.userdetails.placelive}}
+                    {% endif %}
+                  </div>
+                  
+                  <div>
+                    {% if user.userdetails.insta_id %}
+                    <i class="bi bi-instagram"></i>
+                    {{user.userdetails.insta_id}}
+                    {% endif %}
+                  </div>
+                  
+                  <div>
+                    {% if user.userdetails.interest %}
+                    {{user.userdetails.interest}}
+                    {% endif %}
+                  </div>
+                  
+                  
+                  <div class ="text-end" >
+                   
+                    
+                    {% if user.id == request.user.id %}                 
+                   
+                    {% else %}
+                    <a href="{% url "chat:MessagePage" user.id %}" ><input type="button" value="message" name= "mohan" id="btn-message" class="btn btn-outline-dark"></a>
+                      {% if user.is_online %}
+                      <div class="badge text-bg-success text-wrap mt-2" style="width: 4rem; float:left;">
+                        Online
+                      </div>
+                      {% endif %}
+                    {% endif %}
+                    
+                  </div>
+          
+
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      {% else %}
+        <div class="container">
+          <div id="notext"><b>No Data Found..</b></div>
+          <div class="border border-0">
+            
+          </div>
+          
+          <div class="card">
+            <div class="card-body">
+             <b> Tips:</b>
+            <br>
+            <span class="opacity-50">* Try to search with single word.</span><br>
+            <span class="opacity-50">* Avoid to write symbols</span>
+            </div>
+          </div>
+
+
+
+        </div>
+
+
+
+      {% endif %}
+      
+  
+    </div>
+
+
+
+
+ 
+
+
+
+
+ {% endblock content %}

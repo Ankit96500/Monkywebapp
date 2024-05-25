@@ -1,0 +1,153 @@
+{% load static %}
+<!--
+
+  <div class="alert alert-light bg-light" role="alert">
+    edit basic info
+  </div>  
+-->
+<style>
+  .errorlist{
+    list-style-type: none;
+    font-size: 10px;
+    color:red;
+}
+
+.toast{
+  display:flex;
+}
+
+.msg{
+  font-size: 13px;
+  color:red;
+  list-style-type :none;
+}
+
+</style>
+
+<div class="h4 pb-2 mb-4 text-secondary border-bottom border-secondary text-start">
+ Basic Info
+</div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }} msg "{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+    <!--here we write our code--> 
+    <div class="mb-3">
+
+      <!--update form-->
+      {% if status == ok %}
+      <span id="updatefm"></span>
+      
+      {% endif %}
+
+      {% if userformquery %}
+     
+      {% for user in userformquery  %}    
+     
+      <form action="" method="POST" enctype="multipart/form-data" id="imageForm" novalidate>
+        {% csrf_token %}
+          <div class="col text-start">       
+            <input type="text" class="form-control focus-ring focus-ring-light border" name="first_name" id="firstname_input" value="{{user.first_name}}" aria-label="First name" placeholder="First Name" required >
+            <div class="errorlist" id="fname"></div>
+          </div>
+
+          <div class="col py-1 text-start my-2">
+            <input type="text" class="form-control focus-ring focus-ring-light border" name="last_name" id="lastname_input" value="{{user.last_name}}" aria-label="Last name" placeholder="Last Name" required >
+            <div class="errorlist" id="lname"></div>
+          </div>
+         
+          <div class="col py-1 text-start">    
+            <input type="text" class="form-control focus-ring focus-ring-light border" id="emailname_input" value="{{user.email}}" aria-label="Last name" disabled>
+          </div>
+         
+           
+          <div class="col py-2 text-start">
+            <input type="file" class="form-control focus-ring focus-ring-light border"  name="image" accept="image/*"  id="image" placeholder="Profile pic">
+          </div>
+          
+          <div class="text-end">
+            <input type="submit" id="save" value="save" class="btn btn-outline-dark">
+          </div>
+          
+        </form>
+
+
+
+
+      {% endfor %}
+       
+      <!--create form don't needed bcos user already created when signup-->
+      {% endif %}
+     
+        
+    </div>
+
+
+    <script src="{% static "js/jquery.js" %}"></script>                                                               
+
+
+<script>
+  $(document).ready(function() {
+   
+
+    $('#imageForm').on('submit', function(event) {
+      event.preventDefault();
+      
+      //here we set validaation for first name and last name:
+      var fname = $("#firstname_input").val();
+      var lname = $("#lastname_input").val();
+      
+      if (fname === '' || lname === '') {
+        alert('This is required field');
+        return false; // Prevent form submission
+      } 
+
+      // check first name
+      for (var i = 0; i < fname.length; i++) {
+        var symbols = '!@#$%^&*()-_=+[{]}|;:,<.>/?';
+        if (symbols.includes(fname[i])) {
+            alert('Symbols are not allowed. !@#$%^&*()-_=+[{]}|;:,<.>/?`~');
+            return false;
+        }
+      }
+      
+      //check last  name
+      for (var i = 0; i < lname.length; i++) {
+        var symbols = '!@#$%^&*()-_=+[{]}|;:,<.>/?';
+        if (symbols.includes(lname[i])) {
+            alert('Symbols are not allowed. !@#$%^&*()-_=+[{]}|;:,<.>/?`~');
+            return false;
+        }
+      }
+
+
+      var formData = new FormData(this);
+      output="";
+      $.ajax({
+        url: '{% url "chat:EditUserProfile" %}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          
+         // $('#uploadedImage').attr('src', response.image_url);    
+          
+          if(response.status == 1){
+            alert('Data Updated Successfully !!')
+          
+          }
+        },
+      });
+    });
+  });
+  
+</script> 
+
+
+

@@ -1,0 +1,278 @@
+{% load static %}
+<style>
+  #subject_input{
+    display: none;
+  }
+  
+  #classnm_input{
+    display: none;
+  }
+  #academic_year{
+    display:none;
+  }
+  .form-select option {
+    color: black; /* Change color to black */
+  }
+</style>
+
+<!--
+  
+  <div class="alert alert-light" role="alert" >
+    edit Personal info
+  </div>
+-->
+<div class="h4 pb-2 mb-3 text-secondary border-bottom border-secondary text-start">
+  Personal Info
+ </div>
+   
+  <!--here we write our code-->
+  <div class="mb-3">
+   
+    <!--education update form-->
+    {% if userdetailform %}
+      {% for user in userdetailform %}
+      <input type="hidden" value="{{user.id}}" id="user_id">
+      <form action="" method="post">
+
+        <div class=" col text-start mb-3 input-group">
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="collegenm_input" value="{{user.college}}" placeholder="School/College:">
+          {% comment %} <span class="input-group-text" > <i class="bi bi-info-circle"></i></span> {% endcomment %}
+        </div>
+   
+        <div class="col py-1">
+          <select class="form-select form-select-md focus-ring focus-ring-light border " aria-label="Small select example" id='us_category' onchange="handleSelection(this)">
+            <option value="0" {% if user.category == 0 %} selected  {% endif %}>Not Mention </option>
+            <option value="1" {% if user.category == 1 %} selected  {% endif %}>Student</option>
+            <option value="2" {% if user.category == 2 %} selected  {% endif %}>Teacher</option>  
+          </select>
+        </div>
+        
+
+
+        <div class="col py-1 text-start mt-2" id="subject_input_div">
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="subject_input" value="{{user.subject}}" aria-label="subject" placeholder="Expertise in Area">
+          
+        </div>
+
+        <div class="col py-1 text-start" id="classnm_input_div">
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="classnm_input" value="{{user.stream}}" aria-label="Class" placeholder="Class">
+       
+        </div>
+       
+        <div class="col py-1 text-start" id="academic_year_div">
+          <select class="form-select form-select-md focus-ring focus-ring-light border " aria-label="Small select example" id='academic_year' onchange="">
+            <option value="0" {% if user.year == 0 %}  selected  {% endif %}>None</option>
+            <option value="1" {% if user.year == 1 %}  selected  {% endif %}>1st</option>
+            <option value="2" {% if user.year == 2 %}  selected  {% endif %}>2nd</option>
+            <option value="3" {% if user.year == 3 %}  selected  {% endif %}>3rd</option>
+            <option value="4" {% if user.year == 4 %}  selected  {% endif %}>4th</option>
+            <option value="5" {% if user.year == 4 %}  selected  {% endif %}>5th</option>
+          </select>
+        </div>
+      
+        <div class="col text-start py-1 m">
+         
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="placelive_input"  value="{{user.placelive}}"aria-label="Place Live" placeholder="Place Live">
+        </div>
+        
+        <div class="col py-1 text-start">
+        
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="insta_id_input" value="{{user.insta_id}}" aria-label="Instagram Id" placeholder="Instagram Id">
+        </div>
+
+        <div class="col py-1 text-start input-group">
+          <input type="text" class="form-control focus-ring focus-ring-light border " id="interest_input" value="{{user.interest}}" aria-label="Interest" placeholder="Interest">
+          {% comment %} <span class="input-group-text" > <i class="bi bi-info-circle"></i></span> {% endcomment %}
+        </div>
+   
+        <div class="text-end mt-3">
+          <input type="submit" value="save" id="personal-btn" class="btn btn-outline-dark">
+        </div>
+      </form>
+      {% endfor %}
+  {% else %}
+
+
+
+    <!--education create form-->
+    <form action="" method="post">
+      <div class="col text-start">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="collegenm_input" placeholder="School/College:">
+      </div>
+
+      <div class="col py-1">
+        <select class="form-select form-select-md focus-ring focus-ring-light border " aria-label="Small select example" id='us_category' onchange="handleSelection(this)">
+          <option value="0" >Not Mention</option>
+          <option value="1" >Student</option>
+          <option value="2" >Teacher</option>  
+        </select>
+      </div>
+      
+
+
+      <div class="col py-1 text-start" id="subject_input_div">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="subject_input" aria-label="subject" placeholder="Expertise in Area">
+      </div>
+
+      <div class="col py-1 text-start" id="classnm_input_div">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="classnm_input"  aria-label="Class" placeholder="Class">
+      </div>
+    
+    
+      <div class="col py-1 text-start" >
+        <select class="form-select form-select-md focus-ring focus-ring-light border " aria-label="Small select example" id='academic_year' onchange="">
+          <option value="0">None</option>
+          <option value="1">1st</option>
+          <option value="2">2nd</option>
+          <option value="3">3rd</option>
+          <option value="4">4th</option>
+          <option value="5">5th</option>
+        </select>
+      </div>
+    
+    
+      <div class="col text-start py-1 ">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="placelive_input"  aria-label="Place Live" placeholder="Place Live">
+      </div>
+      
+      <div class="col py-1 text-start">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="insta_id_input" aria-label="Instagram Id" placeholder="Instagram Id">
+      </div>
+
+      <div class="col py-3 text-start">
+        <input type="text" class="form-control focus-ring focus-ring-light border " id="interest_input" aria-label="Interest" placeholder="Interest">
+      </div>
+
+ 
+      <div class="text-end ">
+        <input type="submit" value="save" id="personal-btn" class="btn  btn-outline-dark">
+      </div>
+    </form>
+  </div>
+  {% endif %}
+
+  <script src="{% static "js/jquery.js" %}"></script>      
+  <script>
+ 
+
+    // this function handle the category option.
+    function handleSelection(selectElement) {
+      var selectedValue = selectElement.value;
+      console.log('selected value',selectedValue)
+      if (selectedValue == 1){
+        // student show
+        $('#classnm_input').show();
+        $('#academic_year').show();
+        
+        // teacher hide
+        $('#subject_input').hide();
+      }
+      else if(selectedValue == 2){
+        //teacher show
+        $('#subject_input').show();
+
+        //student hide
+        $('#classnm_input').hide();
+        $('#academic_year').hide();
+      }
+      else{
+        // all hide
+        $('#classnm_input').hide();
+        $('#academic_year').hide();
+        $('#subject_input').hide();
+      }
+      // You can perform any actions based on the selected value here
+    }
+    
+
+    $("#personal-btn").on('click',function(e){             
+      event.preventDefault(e)
+      let college = $("#collegenm_input").val();
+      let stream = $("#classnm_input").val();
+      let place = $("#placelive_input").val();
+      let insta_id = $("#insta_id_input").val();
+      let interest = $("#interest_input").val();
+      
+      let category = $("#us_category").val();
+
+      let stu_year = $('#academic_year').val()
+      let subject = $('#subject_input').val();
+      let csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let user_id = $("#user_id").val();
+
+      // set validation for each field
+      
+      //check college allow , only
+       for (var i = 0; i < college.length; i++) {
+        var symbols = '!@#$%^&*()-_=+[{]}|;:<.>/?`~';
+        if (symbols.includes(college[i])) {
+
+            alert('symbols are not allowed in college field \nex: xyz College,City');
+            return false;
+        }
+      }
+      //check stream allow . only
+       for (var i = 0; i < stream.length; i++) {        
+        var symbols = '!@#$%^&*()-_=+[{]}|;:,<.>/?`~ ';
+        if (symbols.includes(stream[i])) {
+            alert('symbols are not allowed in Class field \nex: bcom,mbbs');
+            return false;
+        }
+      }
+      //check subject
+       for (var i = 0; i < subject.length; i++) {
+        var symbols = '!@#$%^&*()=+[{]}|;:<>/?`~1234567890';
+        if (symbols.includes(subject[i])) {
+            alert('symbols and numbers are not allowed in this field \nex: d.s.a,physics,game-coach');
+            return false;
+        }
+      }
+
+        
+      //check place
+      for (var i = 0; i < place.length; i++) {
+        var symbols = '!@#$%^&*()-_=+[{]}|;:,<.>/?`~1234567890';
+        if (symbols.includes(place[i])) {
+
+            alert('symbols and numbers are not allowed in Place filed');
+            return false;
+        }
+      }
+
+      dt = {
+        college:college,
+        stream:stream,
+        place:place,
+        insta:insta_id,
+        interest:interest,
+        subject:subject,
+        year:stu_year,
+        user_id:user_id,
+        category:category,
+        csrfmiddlewaretoken:csrf,
+      }
+  
+      /*
+      */  
+      $.ajax({
+        url   :"{% url 'chat:EditPersonalInfo' %}",
+        type  :"POST",
+        data  :dt,
+        cache :false,
+        success:function(result){
+          //console.log(result);
+          if(result.status == 1){
+            alert("Data Updated Successfully !!")
+          }
+          if(result.status == 0){
+            alert("Data Created Successfully !!")
+          }
+        }
+      });
+      
+    });
+    
+  //  $("#add_name")[0].reset();
+  
+  
+  </script>

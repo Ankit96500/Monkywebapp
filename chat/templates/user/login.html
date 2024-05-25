@@ -1,0 +1,95 @@
+{% extends "main/parent.html" %}
+{% load static %}
+
+{% block navbar %}{% endblock navbar %}
+
+{% block loginpage %}
+
+
+<style>
+    .info{
+        color:red;
+    }
+    table,td,th,tr{
+        border:2px solid black;
+    }
+    .errorlist{
+        list-style-type: none;
+        font-size: 10px;
+        color:red;
+    }
+</style>
+
+
+<div class="container mx-auto p-4 mt-5">
+    <div class="row align-items-center">
+        {% include "main/messages.html" %}
+        
+        <div class="col-md align-self-center " style="background-color:smokey-white;" >
+            <div class="border border-0 shadow-sm" style="width:auto;">
+                <div class="p-1">
+                
+                    <p class="card-text lh-sm text-justify text-body-secondary" style="font-size:13px;">
+                        Welcome to Monky, the online college directory and communication platform designed to connect students and teachers seamlessly. 
+                        <br>
+                        With Monky, students and teachers can easily find and interact with each other via chat.
+                    </p>
+                    <div class="gap-0" >
+                        <h6 class="card-subtitle mb-2 text-body-secondary text-end">
+                            <span style="font-size:10px;">created by:</span>
+                           Ankit Sharma
+                        </h6>
+                        <h6 class="card-subtitle mb-2 text-body-secondary text-end"><i>Bca 3<sup>rd</sup>year</i></h6>
+                        <h6 class="card-subtitle mb-2 text-body-secondary text-end">GGDSD College, Palwal</h6>
+                    </div>
+
+                </div>
+              </div>
+        
+        </div>
+        
+        
+        <div class="col-md align-self-center " style="background-color:smokey-white;">
+            <div class="border border-0 ">
+                <div class="text-center my-3">
+                    <img src="{% static "images/logo.png" %}" alt="picture" class="" height=140 widht=400>
+                </div>
+                
+                <form action=" {% url "LogInPage" %} " method="post" novalidate>
+                    {% csrf_token %}
+                    {{form.non_field_errors}}
+                    {% for fm in form %}
+                    <div>
+                        {{fm.label}} {{fm}} <span class="errorlist"> {{fm.errors | striptags}} </span>  <br>        
+                    </div>
+                    
+                    {% endfor %}
+                    
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <input type="submit" value="LogIn"class="btn btn-outline-dark">
+                    </div>
+                    
+                </form>
+            
+                <p><a href="{% url 'password_reset' %}" class="link-secondary link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">Forgot Password?</a></p>
+                
+                <div class="text-center">
+                    Don't have account?
+                    <a href="{% url "chat:Sign_Up" %}" class="link-underline-light">
+                        Sign Up here 
+                    </a>
+                    
+                </div>
+            </div>
+        
+
+        </div>
+    </div>
+    
+</div>
+
+
+
+
+{% endblock loginpage %}

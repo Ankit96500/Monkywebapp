@@ -1,0 +1,107 @@
+
+
+
+.chat-message-body{
+  display: none;
+}
+
+#chatmessageBox {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 500px;
+    width: auto;
+    overflow: auto;
+   
+  }
+  
+  
+  #chatmessageBox-header{
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: none;
+    width: auto;
+    overflow: auto;
+    border-radius: 5px 5px 0 0 ;
+  }
+  
+  #inbox-fullbody{
+    max-width: 50cm;
+  }
+  
+  #inbox-header{
+    border: 1px solid #cccccc;
+    padding: 1px;
+    margin-top: 17px;
+    height: none;
+    width: auto;
+    overflow: auto;
+    text-align: center;
+    border-radius: 5px 5px 0 0 ;
+    
+  }
+  
+  p{
+   font-weight: 700;
+   font-size: 25px; 
+  }
+  
+  #inbox {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 510px;
+    width: auto;
+    overflow: auto;
+    border-radius: 0 0 5px 5px ;
+  }
+
+
+
+/* show messages in messages box */
+.conbody {
+  margin: 80px 200px;
+  background-color: #cccccc;
+} 
+
+/* Message box starts here */
+.container {
+  clear: both;
+  position: relative;
+}
+
+
+.container .message-body {
+  float: left;
+  width: 300px;
+  height: auto;
+  border: 1px solid #8d8d8d;
+  background-color: #ffffff9d;
+  border: 1px solid #d1cece;
+  padding: 3px 3px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.message-body p1 {
+  margin-bottom: 3;
+
+
+  /* margin: 25px 50px 75px 100px; */
+  
+}
+
+#inbox-text{
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.datetime{
+  font-size: .6rem;
+  color: rgb(146, 146, 146);
+  float: right; 
+  margin-top: 10px;
+}
+
+
