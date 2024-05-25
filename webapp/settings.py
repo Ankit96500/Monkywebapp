@@ -179,7 +179,7 @@ CHANNEL_LAYERS = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'monkyweb944@gmail.com'
+EMAIL_HOST_USER = 'XYZ@example.com'
 EMAIL_HOST_PASSWORD = 'vurj zjni pbzj rsrk'
 EMAIL_USE_TLS = True
 
