@@ -44,7 +44,7 @@ class PasswordFormChange(SetPasswordForm):
 
 
 
-"all these a customized forms"
+"all these are a customized forms"
 
 
     
